@@ -1,12 +1,12 @@
 # Task Manager
 
-> Full-stack web application built with **Node.js + Express** and a premium Vanilla JS frontend. Uses a custom **NoSQL JSON database** for zero-compilation deployment.
+> Full-stack web application built with **Node.js + Express** and a premium JS frontend. Uses a custom **NoSQL JSON database** for zero-compilation deployment.
 
 ## Website Link
 
 https://web-production-afac5.up.railway.app
 
-## 🚀 Features
+## Features
 
 - **Authentication** — JWT-based signup/login with bcrypt password hashing
 - **Role-Based Access Control** — Admin vs Member permissions enforced on all API routes
@@ -16,7 +16,7 @@ https://web-production-afac5.up.railway.app
 - **Dashboard** — Real-time stats (total, in-progress, done, overdue) + recent tasks
 - **Team Management** — Admin can view all users and change roles
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```
 Assignment/
@@ -37,18 +37,16 @@ Assignment/
 ├── package.json
 ├── Procfile               # Railway deploy
 ├── railway.json           # Railway config
-└── .env           # Environment variables 
+└── .env                   # Environment variables
 ```
 
-## ⚙️ Setup & Run Locally
+## Setup & Run Locally
 
 ```bash
 # 1. Install dependencies
 npm install
 
-# 2. Copy env file
-cp .env.example .env
-# Edit .env and set a strong JWT_SECRET
+# 2. Set a strong JWT_SECRET
 
 # 3. Start the server
 npm start
@@ -58,7 +56,7 @@ npm run dev
 # 4. Open browser at http://localhost:3000
 ```
 
-## 🔑 API Endpoints
+## API Endpoints
 
 | Method | Endpoint | Auth | Role |
 |--------|----------|------|------|
@@ -80,17 +78,8 @@ npm run dev
 | GET | /api/users | ✅ | Admin |
 | PUT | /api/users/:id/role | ✅ | Admin |
 
-## 🚢 Deploy to Railway
 
-1. Push this folder to a GitHub repository
-2. Go to [railway.app](https://railway.app) → New Project → Deploy from GitHub
-3. Select your repo
-4. Add environment variables:
-   - `JWT_SECRET` → any long random string
-   - `NODE_ENV` → `production`
-5. Railway auto-detects the `Procfile` and deploys
-
-## 👥 Role Permissions
+## Role Permissions
 
 | Action | Admin | Member |
 |--------|:-----:|:------:|
