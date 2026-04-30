@@ -1,0 +1,109 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Admin User",
+      "email": "admin@demo.com",
+      "password_hash": "$2a$10$kiTarXw4qxRhka/srvCltOS6rfczgrSeanFJ5Vn08rjcOTHmNGvly",
+      "role": "admin",
+      "created_at": "2026-04-30 10:52:17"
+    },
+    {
+      "id": 2,
+      "name": "Rohan",
+      "email": "rohan@demo.com",
+      "password_hash": "$2a$10$OZmRothWcN5HbhFSK3VCiOnrhnH1ot2FitxEp.Eq4WdFh2sR5wfim",
+      "role": "member",
+      "created_at": "2026-04-30 11:25:01"
+    },
+    {
+      "id": 3,
+      "name": "Rahul",
+      "email": "rahul@demo.com",
+      "password_hash": "$2a$10$uLXoX4yq51c0A.fzICUJo.u/Cy3mhsVP08j9oTYtVxiOQjF.dxIl6",
+      "role": "member",
+      "created_at": "2026-04-30 11:42:44"
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "name": "Website Redesign",
+      "description": "Redesign the company homepage",
+      "owner_id": 1,
+      "created_at": "2026-04-30 10:52:52"
+    },
+    {
+      "id": 2,
+      "name": "Website Authentication",
+      "description": "For Security Purpose",
+      "owner_id": 1,
+      "created_at": "2026-04-30 12:03:16"
+    }
+  ],
+  "project_members": [
+    {
+      "project_id": 1,
+      "user_id": 1
+    },
+    {
+      "project_id": 1,
+      "user_id": 2
+    },
+    {
+      "project_id": 1,
+      "user_id": 3
+    },
+    {
+      "project_id": 2,
+      "user_id": 1
+    },
+    {
+      "project_id": 2,
+      "user_id": 3
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Design Mockups",
+      "description": "",
+      "project_id": 1,
+      "assigned_to": 2,
+      "status": "in_progress",
+      "priority": "high",
+      "due_date": "2026-05-12",
+      "created_by": 1,
+      "created_at": "2026-04-30 10:53:23"
+    },
+    {
+      "id": 2,
+      "title": "Design Mockups",
+      "description": "Project to make",
+      "project_id": 1,
+      "assigned_to": 1,
+      "status": "in_progress",
+      "priority": "high",
+      "due_date": "2026-12-22",
+      "created_by": 1,
+      "created_at": "2026-04-30 11:22:22"
+    },
+    {
+      "id": 3,
+      "title": "Security",
+      "description": "Project",
+      "project_id": 2,
+      "assigned_to": 3,
+      "status": "in_progress",
+      "priority": "medium",
+      "due_date": "2026-05-12",
+      "created_by": 1,
+      "created_at": "2026-04-30 11:35:06"
+    }
+  ],
+  "_seq": {
+    "users": 3,
+    "projects": 2,
+    "tasks": 3
+  }
+}
