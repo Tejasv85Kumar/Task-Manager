@@ -3,17 +3,17 @@
  * Mimics a synchronous SQLite-like API so all route code stays clean.
  * Data is persisted to a JSON file on disk.
  */
-const fs   = require('fs');
+const fs = require('fs');
 const path = require('path');
 
 const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'taskmanager.json');
 
 // ─── Load / init store ────────────────────────────────────────────────────────
 let store = {
-  users:          [],   // { id, name, email, password_hash, role, created_at }
-  projects:       [],   // { id, name, description, owner_id, created_at }
-  project_members:[],   // { project_id, user_id }
-  tasks:          [],   // { id, title, description, project_id, assigned_to, status, priority, due_date, created_by, created_at }
+  users: [],   // { id, name, email, password_hash, role, created_at }
+  projects: [],   // { id, name, description, owner_id, created_at }
+  project_members: [],   // { project_id, user_id }
+  tasks: [],   // { id, title, description, project_id, assigned_to, status, priority, due_date, created_by, created_at }
   _seq: { users: 0, projects: 0, tasks: 0 }
 };
 
@@ -50,8 +50,8 @@ const db = {
   // ── USERS ──
   users: {
     findByEmail: (email) => store.users.find(u => u.email === email.toLowerCase()),
-    findById:    (id)    => store.users.find(u => u.id === +id),
-    all:         ()      => [...store.users].sort((a,b) => b.id - a.id),
+    findById: (id) => store.users.find(u => u.id === +id),
+    all: () => [...store.users].sort((a, b) => b.id - a.id),
 
     create({ name, email, password_hash, role }) {
       const user = { id: nextId('users'), name, email: email.toLowerCase(), password_hash, role, created_at: now() };
@@ -66,12 +66,18 @@ const db = {
       return u;
     },
 
+    delete(id) {
+      store.users = store.users.filter(u => u.id !== +id);
+      store.project_members = store.project_members.filter(m => m.user_id !== +id);
+      save();
+    },
+
     safe: (u) => { if (!u) return null; const { password_hash, ...rest } = u; return rest; }
   },
 
   // ── PROJECTS ──
   projects: {
-    all:      ()   => [...store.projects].sort((a,b) => b.id - a.id),
+    all: () => [...store.projects].sort((a, b) => b.id - a.id),
     findById: (id) => store.projects.find(p => p.id === +id),
 
     forUser(userId) {
@@ -80,7 +86,7 @@ const db = {
         .map(pm => pm.project_id);
       return store.projects
         .filter(p => p.owner_id === +userId || memberProjectIds.includes(p.id))
-        .sort((a,b) => b.id - a.id);
+        .sort((a, b) => b.id - a.id);
     },
 
     create({ name, description, owner_id }) {
@@ -104,7 +110,7 @@ const db = {
     },
 
     taskCount: (id) => store.tasks.filter(t => t.project_id === +id).length,
-    memberCount:(id) => store.project_members.filter(pm => pm.project_id === +id).length,
+    memberCount: (id) => store.project_members.filter(pm => pm.project_id === +id).length,
   },
 
   // ── PROJECT MEMBERS ──
@@ -145,30 +151,30 @@ const db = {
       if (project_id) {
         tasks = tasks.filter(t => t.project_id === +project_id);
       }
-      
-      if (status)      tasks = tasks.filter(t => t.status === status);
-      if (priority)    tasks = tasks.filter(t => t.priority === priority);
+
+      if (status) tasks = tasks.filter(t => t.status === status);
+      if (priority) tasks = tasks.filter(t => t.priority === priority);
       if (assigned_to) tasks = tasks.filter(t => t.assigned_to === +assigned_to);
 
-      return tasks.sort((a,b) => b.id - a.id).map(t => db.tasks._enrich(t));
+      return tasks.sort((a, b) => b.id - a.id).map(t => db.tasks._enrich(t));
     },
 
     dashboard(userId, role) {
       let allTasks = [...store.tasks];
-      
+
       // If not admin, they can ONLY see their assigned tasks
       if (role !== 'admin') {
         allTasks = allTasks.filter(t => t.assigned_to === +userId);
       }
-      
+
       const today = new Date().toISOString().split('T')[0];
       return {
-        total:      allTasks.length,
-        todo:       allTasks.filter(t => t.status === 'todo').length,
+        total: allTasks.length,
+        todo: allTasks.filter(t => t.status === 'todo').length,
         inProgress: allTasks.filter(t => t.status === 'in_progress').length,
-        done:       allTasks.filter(t => t.status === 'done').length,
-        overdue:    allTasks.filter(t => t.due_date && t.due_date < today && t.status !== 'done').length,
-        recent:     allTasks.sort((a,b) => b.id - a.id).slice(0,5).map(t => db.tasks._enrich(t))
+        done: allTasks.filter(t => t.status === 'done').length,
+        overdue: allTasks.filter(t => t.due_date && t.due_date < today && t.status !== 'done').length,
+        recent: allTasks.sort((a, b) => b.id - a.id).slice(0, 5).map(t => db.tasks._enrich(t))
       };
     },
 
@@ -203,13 +209,13 @@ const db = {
 
     _enrich(t) {
       const assignee = t.assigned_to ? store.users.find(u => u.id === t.assigned_to) : null;
-      const creator  = store.users.find(u => u.id === t.created_by);
-      const project  = store.projects.find(p => p.id === t.project_id);
+      const creator = store.users.find(u => u.id === t.created_by);
+      const project = store.projects.find(p => p.id === t.project_id);
       return {
         ...t,
         assignee_name: assignee ? assignee.name : null,
-        creator_name:  creator  ? creator.name  : null,
-        project_name:  project  ? project.name  : null,
+        creator_name: creator ? creator.name : null,
+        project_name: project ? project.name : null,
       };
     }
   }
