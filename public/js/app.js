@@ -12,7 +12,7 @@ async function api(method, path, body) {
     headers: { 'Content-Type': 'application/json' },
   };
   if (token) opts.headers['Authorization'] = `Bearer ${token}`;
-  if (body)  opts.body = JSON.stringify(body);
+  if (body) opts.body = JSON.stringify(body);
   const res = await fetch(API + path, opts);
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Request failed');
@@ -23,7 +23,7 @@ async function api(method, path, body) {
 function toast(msg, type = 'info') {
   const el = document.createElement('div');
   el.className = `toast ${type}`;
-  const icons = { success:'✅', error:'❌', info:'ℹ️' };
+  const icons = { success: '✅', error: '❌', info: 'ℹ️' };
   el.innerHTML = `<span>${icons[type]}</span><span>${msg}</span>`;
   document.getElementById('toast-container').appendChild(el);
   setTimeout(() => el.remove(), 3500);
@@ -61,7 +61,7 @@ function setLoading(btnId, loading) {
 async function handleLogin(e) {
   e.preventDefault();
   clearErrors();
-  const email    = document.getElementById('login-email').value.trim();
+  const email = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-password').value;
   const btn = document.getElementById('login-btn');
   btn.disabled = true;
@@ -80,10 +80,10 @@ async function handleLogin(e) {
 async function handleSignup(e) {
   e.preventDefault();
   clearErrors();
-  const name     = document.getElementById('signup-name').value.trim();
-  const email    = document.getElementById('signup-email').value.trim();
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
   const password = document.getElementById('signup-password').value;
-  const role     = document.getElementById('signup-role').value;
+  const role = document.getElementById('signup-role').value;
   const btn = document.getElementById('signup-btn');
   btn.disabled = true;
   btn.querySelector('span').textContent = 'Creating account…';
@@ -99,7 +99,7 @@ async function handleSignup(e) {
 }
 
 function onAuthSuccess(data) {
-  token       = data.token;
+  token = data.token;
   currentUser = data.user;
   localStorage.setItem('ttm_token', token);
   localStorage.setItem('ttm_user', JSON.stringify(currentUser));
@@ -120,11 +120,11 @@ function initApp() {
   document.getElementById('app-screen').classList.add('active');
 
   // Sidebar user info
-  document.getElementById('sidebar-name').textContent   = currentUser.name;
+  document.getElementById('sidebar-name').textContent = currentUser.name;
   document.getElementById('sidebar-avatar').textContent = currentUser.name.charAt(0).toUpperCase();
   const roleBadge = document.getElementById('sidebar-role');
   roleBadge.textContent = currentUser.role;
-  roleBadge.className   = `user-role-badge ${currentUser.role}`;
+  roleBadge.className = `user-role-badge ${currentUser.role}`;
 
   // Show/hide admin-only elements
   document.querySelectorAll('.admin-only').forEach(el => {
@@ -140,14 +140,14 @@ function navigate(view, projectId) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
 
   const viewEl = document.getElementById(`view-${view}`);
-  const navEl  = document.getElementById(`nav-${view}`);
+  const navEl = document.getElementById(`nav-${view}`);
   if (viewEl) viewEl.classList.add('active');
-  if (navEl)  navEl.classList.add('active');
+  if (navEl) navEl.classList.add('active');
 
-  if (view === 'dashboard')       loadDashboard();
-  else if (view === 'projects')   loadProjects();
-  else if (view === 'tasks')      loadAllTasks();
-  else if (view === 'team')       loadTeam();
+  if (view === 'dashboard') loadDashboard();
+  else if (view === 'projects') loadProjects();
+  else if (view === 'tasks') loadAllTasks();
+  else if (view === 'team') loadTeam();
   else if (view === 'project-detail') loadProjectDetail(projectId);
 }
 
@@ -160,10 +160,10 @@ async function loadDashboard() {
 
   try {
     const data = await api('GET', '/api/tasks/dashboard');
-    document.getElementById('stat-total-val').textContent    = data.stats.total;
+    document.getElementById('stat-total-val').textContent = data.stats.total;
     document.getElementById('stat-progress-val').textContent = data.stats.inProgress;
-    document.getElementById('stat-done-val').textContent     = data.stats.done;
-    document.getElementById('stat-overdue-val').textContent  = data.stats.overdue;
+    document.getElementById('stat-done-val').textContent = data.stats.done;
+    document.getElementById('stat-overdue-val').textContent = data.stats.overdue;
 
     const tbody = document.getElementById('recent-tasks-body');
     if (!data.recent.length) {
@@ -172,7 +172,7 @@ async function loadDashboard() {
     }
     tbody.innerHTML = data.recent.map(t => `
       <tr>
-        <td><strong>${esc(t.title)}</strong>${t.description ? `<br><small style="color:var(--text2)">${esc(t.description).slice(0,60)}</small>` : ''}</td>
+        <td><strong>${esc(t.title)}</strong>${t.description ? `<br><small style="color:var(--text2)">${esc(t.description).slice(0, 60)}</small>` : ''}</td>
         <td>${esc(t.project_name || '—')}</td>
         <td>${t.assignee_name ? `<span class="member-chip" style="padding:4px 10px">${esc(t.assignee_name)}</span>` : '<span style="color:var(--text2)">Unassigned</span>'}</td>
         <td><span class="badge badge-${t.priority}">${t.priority}</span></td>
@@ -239,7 +239,7 @@ async function loadProjectDetail(id) {
           <div class="member-chip-role">${m.role}</div>
         </div>
         ${currentUser.role === 'admin' && m.id !== data.project.owner_id
-          ? `<button class="btn-remove-member" onclick="removeMember(${id}, ${m.id})" title="Remove">✕</button>` : ''}
+        ? `<button class="btn-remove-member" onclick="removeMember(${id}, ${m.id})" title="Remove">✕</button>` : ''}
       </div>`).join('') || '<span style="color:var(--text2)">No members yet.</span>';
 
     // Tasks
@@ -258,7 +258,7 @@ function renderKanban(tasks, projectId) {
     document.getElementById(`cards-${status}`).innerHTML = cols[status].map(t => {
       const isOverdue = t.due_date && t.due_date < today && t.status !== 'done';
       return `
-        <div class="task-card" onclick="openEditTaskModal(${JSON.stringify(t).replace(/"/g,'&quot;')})">
+        <div class="task-card" onclick="openEditTaskModal(${JSON.stringify(t).replace(/"/g, '&quot;')})">
           <div class="task-card-title">${esc(t.title)}</div>
           <div class="task-card-meta">
             <span class="badge badge-${t.priority}">${t.priority}</span>
@@ -280,16 +280,16 @@ async function loadAllTasks() {
     const cur = sel.value;
     sel.innerHTML = '<option value="">All Projects</option>' +
       allProjects.map(p => `<option value="${p.id}" ${p.id == cur ? 'selected' : ''}>${esc(p.name)}</option>`).join('');
-  } catch (_) {}
+  } catch (_) { }
 
-  const status   = document.getElementById('filter-status').value;
+  const status = document.getElementById('filter-status').value;
   const priority = document.getElementById('filter-priority').value;
-  const projId   = document.getElementById('filter-project').value;
+  const projId = document.getElementById('filter-project').value;
 
   let url = '/api/tasks?';
-  if (status)   url += `status=${status}&`;
+  if (status) url += `status=${status}&`;
   if (priority) url += `priority=${priority}&`;
-  if (projId)   url += `project_id=${projId}&`;
+  if (projId) url += `project_id=${projId}&`;
 
   const today = new Date().toISOString().split('T')[0];
   try {
@@ -309,7 +309,7 @@ async function loadAllTasks() {
         <td>${t.due_date ? `<span class="${isOverdue ? 'badge badge-overdue' : ''}">${isOverdue ? '⚠️ ' : ''}${t.due_date}</span>` : '—'}</td>
         <td>${statusBadge(t.status)}</td>
         ${currentUser.role === 'admin' ? `<td style="display:flex;gap:6px;">
-          <button class="btn btn-ghost btn-sm" onclick='openEditTaskModal(${JSON.stringify(t).replace(/'/g,"&#39;")})'>Edit</button>
+          <button class="btn btn-ghost btn-sm" onclick='openEditTaskModal(${JSON.stringify(t).replace(/'/g, "&#39;")})'>Edit</button>
           <button class="btn btn-danger btn-sm" onclick="deleteTask(${t.id})">Del</button>
         </td>` : '<td></td>'}
       </tr>`;
@@ -328,12 +328,14 @@ async function loadTeam() {
         <td>${esc(u.email)}</td>
         <td><span class="badge ${u.role === 'admin' ? 'badge-high' : 'badge-todo'}">${u.role}</span></td>
         <td style="color:var(--text2)">${new Date(u.created_at).toLocaleDateString()}</td>
-        <td>
+        <td style="display:flex;gap:8px;align-items:center;">
           ${u.id !== currentUser.id ? `
           <select onchange="changeRole(${u.id}, this.value)" style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 10px;color:var(--text);font-size:.83rem;">
             <option value="member" ${u.role === 'member' ? 'selected' : ''}>Member</option>
             <option value="admin"  ${u.role === 'admin'  ? 'selected' : ''}>Admin</option>
-          </select>` : '<span style="color:var(--text2)">You</span>'}
+          </select>
+          <button class="btn btn-danger btn-sm" onclick="deleteUser(${u.id}, '${esc(u.name)}')">Delete</button>
+          ` : '<span style="color:var(--text2)">You</span>'}
         </td>
       </tr>`).join('');
   } catch (err) { toast(err.message, 'error'); }
@@ -347,9 +349,18 @@ async function changeRole(userId, role) {
   } catch (err) { toast(err.message, 'error'); }
 }
 
+async function deleteUser(userId, name) {
+  if (!confirm(`Delete user "${name}"? This will also remove them from all projects.`)) return;
+  try {
+    await api('DELETE', `/api/users/${userId}`);
+    toast(`User "${name}" deleted.`, 'success');
+    loadTeam();
+  } catch (err) { toast(err.message, 'error'); }
+}
+
 /* ─── Project Modal ──────────────────────────────────────────────────────── */
 function openProjectModal(id, name, desc) {
-  document.getElementById('proj-id').value   = id || '';
+  document.getElementById('proj-id').value = id || '';
   document.getElementById('proj-name').value = name || '';
   document.getElementById('proj-desc').value = desc || '';
   document.getElementById('project-modal-title').textContent = id ? 'Edit Project' : 'New Project';
@@ -358,7 +369,7 @@ function openProjectModal(id, name, desc) {
 
 async function saveProject(e) {
   e.preventDefault();
-  const id   = document.getElementById('proj-id').value;
+  const id = document.getElementById('proj-id').value;
   const name = document.getElementById('proj-name').value.trim();
   const desc = document.getElementById('proj-desc').value.trim();
   try {
@@ -385,12 +396,12 @@ async function deleteProject(id) {
 
 /* ─── Task Modal ─────────────────────────────────────────────────────────── */
 async function openTaskModal(projectId) {
-  document.getElementById('task-id').value          = '';
-  document.getElementById('task-title').value       = '';
-  document.getElementById('task-desc').value        = '';
-  document.getElementById('task-priority').value    = 'medium';
-  document.getElementById('task-status').value      = 'todo';
-  document.getElementById('task-due').value         = '';
+  document.getElementById('task-id').value = '';
+  document.getElementById('task-title').value = '';
+  document.getElementById('task-desc').value = '';
+  document.getElementById('task-priority').value = 'medium';
+  document.getElementById('task-status').value = 'todo';
+  document.getElementById('task-due').value = '';
   document.getElementById('task-modal-title').textContent = 'New Task';
 
   await populateTaskSelects(projectId);
@@ -399,19 +410,19 @@ async function openTaskModal(projectId) {
 
 async function openEditTaskModal(task) {
   if (typeof task === 'string') task = JSON.parse(task);
-  document.getElementById('task-id').value          = task.id;
-  document.getElementById('task-title').value       = task.title;
-  document.getElementById('task-desc').value        = task.description || '';
-  document.getElementById('task-priority').value    = task.priority;
-  document.getElementById('task-status').value      = task.status;
-  document.getElementById('task-due').value         = task.due_date || '';
+  document.getElementById('task-id').value = task.id;
+  document.getElementById('task-title').value = task.title;
+  document.getElementById('task-desc').value = task.description || '';
+  document.getElementById('task-priority').value = task.priority;
+  document.getElementById('task-status').value = task.status;
+  document.getElementById('task-due').value = task.due_date || '';
   document.getElementById('task-modal-title').textContent = 'Edit Task';
 
   await populateTaskSelects(task.project_id, task.assigned_to);
 
   // Members can only change status
   const isAdmin = currentUser.role === 'admin';
-  ['task-title','task-desc','task-project','task-assignee','task-priority','task-due'].forEach(id => {
+  ['task-title', 'task-desc', 'task-project', 'task-assignee', 'task-priority', 'task-due'].forEach(id => {
     document.getElementById(id).disabled = !isAdmin;
   });
 
@@ -435,7 +446,7 @@ async function populateTaskSelects(selectedProject, selectedAssignee) {
     const ud = await api('GET', '/api/users/members');
     assignSel.innerHTML = '<option value="">Unassigned</option>' +
       ud.users.map(u => `<option value="${u.id}" ${u.id == selectedAssignee ? 'selected' : ''}>${esc(u.name)}</option>`).join('');
-  } catch (_) {}
+  } catch (_) { }
 }
 
 async function saveTask(e) {
@@ -443,13 +454,13 @@ async function saveTask(e) {
   const id = document.getElementById('task-id').value;
 
   const body = {
-    title:       document.getElementById('task-title').value.trim(),
+    title: document.getElementById('task-title').value.trim(),
     description: document.getElementById('task-desc').value.trim(),
-    project_id:  document.getElementById('task-project').value,
+    project_id: document.getElementById('task-project').value,
     assigned_to: document.getElementById('task-assignee').value || null,
-    priority:    document.getElementById('task-priority').value,
-    status:      document.getElementById('task-status').value,
-    due_date:    document.getElementById('task-due').value || null,
+    priority: document.getElementById('task-priority').value,
+    status: document.getElementById('task-status').value,
+    due_date: document.getElementById('task-due').value || null,
   };
 
   // Members only update status
@@ -518,13 +529,13 @@ function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
 function esc(str) {
   return String(str)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 function statusBadge(status) {
-  const map = { todo:'badge-todo', in_progress:'badge-progress', done:'badge-done' };
-  const labels = { todo:'To Do', in_progress:'In Progress', done:'Done' };
+  const map = { todo: 'badge-todo', in_progress: 'badge-progress', done: 'badge-done' };
+  const labels = { todo: 'To Do', in_progress: 'In Progress', done: 'Done' };
   return `<span class="badge ${map[status] || ''}">${labels[status] || status}</span>`;
 }
 
