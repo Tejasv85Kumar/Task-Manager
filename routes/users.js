@@ -33,4 +33,16 @@ router.put('/:id/role', requireRole('admin'), (req, res) => {
   res.json({ message: 'Role updated', user: db.users.safe(updated) });
 });
 
+// DELETE /api/users/:id  (admin only)
+router.delete('/:id', requireRole('admin'), (req, res) => {
+  if (+req.params.id === req.user.id)
+    return res.status(400).json({ error: 'Cannot delete your own account' });
+
+  const user = db.users.findById(req.params.id);
+  if (!user) return res.status(404).json({ error: 'User not found' });
+
+  db.users.delete(+req.params.id);
+  res.json({ message: 'User deleted successfully' });
+});
+
 module.exports = router;
